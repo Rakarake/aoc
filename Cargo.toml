@@ -7,3 +7,5 @@ edition = "2021"
 
 [dependencies]
 aoc_table = { git = "https://github.com/samhamnam/aoc_table", version = "*" }
+rand = "*"
+
