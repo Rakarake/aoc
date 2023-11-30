@@ -18,56 +18,23 @@ const TEST_INPUT: &'static str = "\
 const INPUT: &'static str = include_str!("day_1.input");
 
 pub fn part1() -> u32 {
-    let a: Vec<Vec<u32>> = Vec::new();
-    let nums = INPUT.lines().map(|line| line.parse::<u32>());
-    let num_groups = nums.fold(a, |mut acc, maybe_n| {
-        match maybe_n {
-            Ok(n) => {
-                match acc.last_mut() {
-                    Some(last) => {
-                        last.push(n)
-                    }
-                    None => {
-                        let new_group: Vec<u32> = vec![n];
-                        acc.push(new_group);
-                    }
-                }
-            },
-            Err(_e) => {
-                acc.push(Vec::new())
-            }
-        }
-        acc
-    });
-    let num_sums = num_groups.iter().map(|g| g.iter().fold(0, |sum, x| sum + x));
-    let mut max = 0;
-    num_sums.for_each(|sum| if sum > max { max = sum });
-    max
+    elf_sums(INPUT).into_iter().max().unwrap()
+}
+
+fn elf_sums(input: &'static str) -> Vec<u32> {
+    input
+        .split("\n\n")
+        .map(|section| {
+            section
+                .lines()
+                .map(|line| line.parse::<u32>().unwrap())
+                .sum::<u32>()
+        })
+        .collect()
 }
 
 pub fn part2() -> u32 {
-    let a: Vec<Vec<u32>> = Vec::new();
-    let nums = INPUT.lines().map(|line| line.parse::<u32>());
-    let num_groups = nums.fold(a, |mut acc, maybe_n| {
-        match maybe_n {
-            Ok(n) => {
-                match acc.last_mut() {
-                    Some(last) => {
-                        last.push(n)
-                    }
-                    None => {
-                        let new_group: Vec<u32> = vec![n];
-                        acc.push(new_group);
-                    }
-                }
-            },
-            Err(_e) => {
-                acc.push(Vec::new())
-            }
-        }
-        acc
-    });
-    let num_sums = num_groups.iter().map(|g| g.iter().fold(0, |sum, x| sum + x));
+    let num_sums = elf_sums(INPUT);
     // Ascending order
     let mut top_three_tmp: [u32; 3] = [0; 3];
     for num in num_sums {
@@ -89,4 +56,3 @@ pub fn part2() -> u32 {
     }
     top_three_tmp.iter().sum()
 }
-
