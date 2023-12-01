@@ -6,6 +6,15 @@ pqr3stu8vwx
 a1b2c3d4e5f
 treb7uchet\
 ";
+const TEST_INPUT_2: &'static str = "\
+two1nine
+eightwothree
+abcone2threexyz
+xtwone3four
+4nineeightseven2
+zoneight234
+7pqrstsixteen\
+";
 
 const INPUT: &'static str = include_str!("day_1.input");
 

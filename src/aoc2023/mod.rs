@@ -20,8 +20,9 @@ pub fn run_all() {
     //    .add(5, || "Different", || "types!")
     //    .add_next(|| "Different", || "types!")
     //    .run();
-    TableGen::new("❄️  Morbin' AOC 2023 Table 🎅 hoho")
-        .add(0, day_test::part1, day_test::part2)
-        .add_next(day_1::part1, day_1::part2)
-        .run();
+    //TableGen::new("❄️  Morbin' AOC 2023 Table 🎅 hoho")
+    //    .add(0, day_test::part1, day_test::part2)
+    //    .add_next(day_1::part1, day_1::part2)
+    //    .run();
+    println!("part1: {:?}, part2: {:?}", day_1::part1(), day_1::part2())
 }
