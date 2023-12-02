@@ -26,9 +26,9 @@ enum Color {
 
 fn parse_color(i: &str) -> IResult<&str, (u32, Color)> {
     pair(u32, alt((
-                  value(Color::Red, tag("red")),
-                  value(Color::Green, tag("green")),
-                  value(Color::Blue, tag("blue"))
+                  value(Color::Red, tag(" red")),
+                  value(Color::Green, tag(" green")),
+                  value(Color::Blue, tag(" blue"))
               ))
     )(i)
 }
@@ -65,27 +65,4 @@ pub fn part1() -> u32 {
 pub fn part2() -> u32 {
     0
 }
-//fn parse_letter(i: &str) -> nom::IResult<&str, u32> {
-//    alt((parse_letter_word, map_res(anychar, |c| c.to_digit(10).ok_or("bad soup"))))(i)
-//}
-//
-//fn parse_multiple_letters(i: &str) -> nom::IResult<&str, Vec<Option<u32>>> {
-//    many1(alt(
-//            (map(parse_letter, |l| Some(l)),
-//            value(None, anychar)))
-//        )(i)
-//}
-//
-//fn parse_line(line: &str) -> u32 {
-//    let r = parse_multiple_letters(line);
-//    let (_, rr) = r.unwrap();
-//    let letters: Vec<u32> = rr.into_iter().filter_map(|letter| letter).collect();
-//    // Wow
-//    println!("{:?}, {:?}", letters.first().unwrap(), letters.last().unwrap());
-//    letters.first().unwrap() * 10 + letters.last().unwrap()
-//}
-
-//pub fn part2() -> u32 {
-//    INPUT.lines().map(|line| parse_line(line)).sum()
-//}
 
