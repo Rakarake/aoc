@@ -52,9 +52,7 @@ fn line_highest_colors(i: &str) -> (u32, u32, u32) {
 }
 
 pub fn part1() -> u32 {
-    INPUT.lines().map(|l| {
-        line_highest_colors(l)
-    })
+    INPUT.lines().map(|l| line_highest_colors(l))
     .enumerate()
     .fold(0, |acc, (index, x)| {
         // Is the line possible?
@@ -62,7 +60,11 @@ pub fn part1() -> u32 {
     })
 }
 
+fn game_power(colors: (u32, u32, u32)) -> u32 {
+    colors.0 * colors.1 * colors.2
+}
+
 pub fn part2() -> u32 {
-    0
+    INPUT.lines().map(|l| game_power(line_highest_colors(l))).sum()
 }
 
