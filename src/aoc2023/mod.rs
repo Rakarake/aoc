@@ -1,7 +1,8 @@
 // Put all the days here
 
 pub mod day_test;
-pub mod day_1;
+pub mod day1;
+pub mod day2;
 
 use aoc_table::table_gen::TableGen;
 
@@ -24,5 +25,5 @@ pub fn run_all() {
     //    .add(0, day_test::part1, day_test::part2)
     //    .add_next(day_1::part1, day_1::part2)
     //    .run();
-    println!("part1: {:?}, part2: {:?}", day_1::part1(), day_1::part2())
+    println!("part1: {:?}, part2: {:?}", day1::part1(), day1::part2())
 }

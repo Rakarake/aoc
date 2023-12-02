@@ -15,7 +15,7 @@ const TEST_INPUT: &'static str = "\
 10000\
 ";
 
-const INPUT: &'static str = include_str!("day_1.input");
+const INPUT: &'static str = include_str!("day1.input");
 
 pub fn part1() -> u32 {
     elf_sums(INPUT).into_iter().max().unwrap()
