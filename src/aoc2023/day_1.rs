@@ -31,50 +31,35 @@ pub fn part1() -> u32 {
         .sum()
 }
 
-//const letter_words: [&'static str ; 9] = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
-use nom::combinator::value;
-use nom::branch::alt;
-use nom::multi::many1;
-use nom::combinator::map;
-use nom::combinator::map_res;
-use nom::character::complete::anychar;
+const DIGIT_WORDS: [&'static str; 9] = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
 
-// TODO: make sure they are spelled right
-fn parse_letter_word(i: &str) -> nom::IResult<&str, u32> {
-    alt((
-        value(1, tag("one")),
-        value(2, tag("two")),
-        value(3, tag("three")),
-        value(4, tag("four")),
-        value(5, tag("five")),
-        value(6, tag("six")), 
-        value(7, tag("seven")), 
-        value(8, tag("eight")), 
-        value(9, tag("nine"))
-    ))(i)
-}
-
-fn parse_letter(i: &str) -> nom::IResult<&str, u32> {
-    alt((parse_letter_word, map_res(anychar, |c| c.to_digit(10).ok_or("bad soup"))))(i)
-}
-
-fn parse_multiple_letters(i: &str) -> nom::IResult<&str, Vec<Option<u32>>> {
-    many1(alt(
-            (map(parse_letter, |l| Some(l)),
-            value(None, anychar)))
-        )(i)
-}
-
-fn parse_line(line: &str) -> u32 {
-    let r = parse_multiple_letters(line);
-    let (_, rr) = r.unwrap();
-    let letters: Vec<u32> = rr.into_iter().filter_map(|letter| letter).collect();
-    // Wow
-    println!("{:?}, {:?}", letters.first().unwrap(), letters.last().unwrap());
-    letters.first().unwrap() * 10 + letters.last().unwrap()
+// Ah, there is no match_indices_map function, ah
+fn parse_digit(s: &str) -> u32 {
+    if let Some(x) = s.chars().next().unwrap().to_digit(10) { x }
+    else {
+        DIGIT_WORDS.iter().position(|digit_word| digit_word.contains(s)).unwrap() as u32 + 1 
+    }
 }
 
 pub fn part2() -> u32 {
-    INPUT.lines().map(|line| parse_line(line)).sum()
+    INPUT
+        .lines()
+        .map(|line| {
+            // All digit words and their indices in the line ("one", "two" etc)
+            let mut x: Vec<Vec<(usize, &str)>> = DIGIT_WORDS.iter().map(|digit_word| {
+                line.match_indices(digit_word).collect()
+            }).collect();
+            // All digits (represented by Arabic numerals) and their indices
+            let y: Vec<(usize, &str)> = line.match_indices(|c: char| c.is_digit(10)).collect();
+            // Combine these
+            x.push(y);
+            // We are interested which occurrences comes first and last, so every group
+            // needs to be in the same structure to be compared.
+            let z = x.concat();
+            let first = z.iter().min_by_key(|v| v.0).unwrap();
+            let last = z.iter().max_by_key(|v| v.0).unwrap();
+            parse_digit(first.1) * 10 + parse_digit(last.1)
+         })
+        .sum()
 }
 
