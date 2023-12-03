@@ -26,7 +26,7 @@ fn parse(i: &str) -> Vec<Vec<Tile>> {
         .map(|line|
             line.chars()
             .map(|c|{
-                if c == 'c' { Tile::Empty } else {
+                if c == '.' { Tile::Empty } else {
                     if let Some(x) = c.to_digit(10) {Tile::Number(x)} else { Tile::Symbol }
                 }
             }).collect()
