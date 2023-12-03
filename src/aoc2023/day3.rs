@@ -69,11 +69,17 @@ fn is_digit_part_digit(m: &Vec<Vec<Tile>>, pos: (usize, usize)) -> bool {
 }
 
 // Takes the position of the first digit of the number
+fn is_num_part_num_rec(m: &Vec<Vec<Tile>>, pos: (usize, usize)) -> bool {
+    if is_tile_number(m, (pos.0 as i32, pos.1 as i32)) {
+        is_digit_part_digit(m, pos) || is_num_part_num_rec(m, (pos.0 + 1, pos.1))
+    } else { false }
+}
+// Takes the position of the first digit of the number
 // Fails if not the first
 //                                           x      y
 fn is_num_part_num(m: &Vec<Vec<Tile>>, pos: (usize, usize)) -> bool {
     let (x, y) = (pos.0 as i32, pos.1 as i32);
-    is_tile_number(m, (x -1, y)) && (is_digit_part_digit(m, pos) || is_num_part_num(m, (pos.0 + 1, pos.1)))
+    (!is_tile_number(m, (x -1, y))) && is_num_part_num_rec(m, (pos.0, pos.1))
 }
 
 fn all_part_numbers(m: &Vec<Vec<Tile>>) -> Vec<(usize, usize)> {
