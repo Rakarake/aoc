@@ -8,7 +8,7 @@ const TEST_INPUT: &'static str = "\
 ..592.....
 ......755.
 ...$.*....
-.664.598..
+.664.598..\
 ";
 
 const INPUT: &'static str = include_str!("day3.input");
@@ -50,6 +50,11 @@ fn is_tile_that(m: &Vec<Vec<Tile>>, pos: (i32, i32), that: Tile) -> bool {
 fn is_tile_number(m: &Vec<Vec<Tile>>, pos: (i32, i32)) -> bool {
     if let Some(t) = get_tile(m, pos) { match t { Tile::Number(_) => true, _ => false } }
         else {false}
+}
+
+fn get_tile_number(m: &Vec<Vec<Tile>>, pos: (usize, usize)) -> Option<u32> {
+    if let Some(t) = get_tile(m, (pos.0 as i32, pos.1 as i32)) { match t { Tile::Number(n) => Some(n), _ => None } }
+        else { None }
 }
 
 fn is_digit_part_digit(m: &Vec<Vec<Tile>>, pos: (usize, usize)) -> bool {
@@ -104,55 +109,48 @@ fn get_num_value(m: &Vec<Vec<Tile>>, pos: (usize, usize)) -> u32 {
     z.iter().rev().enumerate().fold(0, |n, (pow, digit)| n + digit * 10^(pow as u32))
 }
 
+// Start of vector is most significant
+fn make_number(digits: &Vec<u32>) -> u32 {
+    digits.iter().rev().enumerate().fold(0, |acc, (pow, digit)|
+                                         acc + digit * 10^(pow as u32)
+                                         )
+}
+
 pub fn part1() -> u32 {
+    // Digits for one number
+    let mut digits: Vec<u32> = Vec::new();
+    // When whole number is parsed, if it was a part digit: add it up
+    let mut was_part_digit: bool = false;
     let m = parse(TEST_INPUT);
-    let part_number_locations = all_part_numbers(&m);
-    part_number_locations.iter().map(|pos| get_num_value(&m, pos.clone())).sum()
-    //m
-    //    .iter()
-    //    .enumerate()
-    //    .map(|(y, row)| {
-    //        row
-    //            .iter()
-    //            .enumerate()
-    //            .fold((0, Vec::new()), |(sum, ds), (x, t)| {
-    //                if is_num_part_num(m, (x, y)) { sum +  }
-    //            })
-    //    })
-    //    .sum()
-    //let parsed = parse(TEST_INPUT);
-    //let height = parsed.len();
-    //let width = parsed.first().unwrap().len();
-    //let mut is_part_number = false;
-    //let mut digits = Vec::new();
-    //for (y, row) in parsed.iter().enumerate() {
-    //    for (x, tile) in row.iter().enumerate() {
-    //        // If tile is number
-    //        match tile {
-    //            Tile::Empty => {
-    //                is_part_number = false; 
-    //                // If digits is not empty => process whole number
-    //            },
-    //            Tile::Number(n) => {
-    //                // If not already a part number, check in all directions if part number
-    //                if y != 0 {
-    //                    if parsed[y-1][x] == Tile::Symbol { is_part_number = true; }
-    //                }
-    //                if y != height-1 {
-    //                    if parsed[y+1][x] == Tile::Symbol { is_part_number = true; }
-    //                }
-    //                digits.push(n);
-    //                if x + 1 == width {
-    //                    // Process whole number
-    //                }
-    //            },
-    //            Tile::Symbol => {
-    //                // If digits is not empty => process whole number
-    //            },
-    //        }
-    //    }
-    //}
-    //0
+    m
+        .iter()
+        .enumerate()
+        .map(|(y, line)| 
+            line
+                .iter()
+                .enumerate()
+                .fold(0, |acc, (x, tile)| {
+                    match tile {
+                        Tile::Empty => acc,
+                        Tile::Symbol => acc,
+                        Tile::Number(n) => {
+                            digits.push(*n);
+                            if is_digit_part_digit(&m, (x,y)) {
+                                was_part_digit = true;
+                            }
+                            if get_tile(&m, (x as i32 + 1, y as i32)) == None {
+                                // Done, now if it was a "part number" add it
+                                if was_part_digit {
+                                    let num = make_number(&digits);
+                                    digits.clear();
+                                    was_part_digit = false;
+                                    acc + num
+                                } else { acc }
+                            } else { acc }
+                        },
+                    }
+                })
+        ).sum()
 }
 
 
