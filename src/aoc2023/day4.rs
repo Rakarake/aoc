@@ -20,7 +20,7 @@ fn parse(i: &str) -> Vec<(Vec<u32>, Vec<u32>)> {
     }).collect()
 }
 
-fn get_line_winning_cards((c1, c2): (Vec<u32>, Vec<u32>)) -> Vec<u32> {
+fn get_line_winning_nums((c1, c2): (Vec<u32>, Vec<u32>)) -> Vec<u32> {
     // get-num, win-num
     c2.iter().filter_map(|g_n| c1.iter().find(|w_n| *w_n == g_n)).copied().collect()
 }
@@ -34,7 +34,7 @@ fn make_score_from_line(n_hits: u32) -> u32 {
 }
 
 pub fn part1() -> u32 {
-    parse(INPUT).iter().map(|line| make_score_from_line(get_line_winning_cards(line.clone()).len() as u32)).sum()
+    parse(INPUT).iter().map(|line| make_score_from_line(get_line_winning_nums(line.clone()).len() as u32)).sum()
 }
 
 pub fn part2() -> u32 {
