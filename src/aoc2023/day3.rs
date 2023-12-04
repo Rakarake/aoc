@@ -70,7 +70,6 @@ fn is_digit_part_digit(m: &Vec<Vec<Tile>>, pos: (usize, usize)) -> bool {
 
 // Start of vector is most significant
 fn make_number(digits: &Vec<u32>) -> u32 {
-    println!("Ok: {:?}", digits);
     digits.iter().rev().enumerate().map(|(exponent, d)|
             d * 10_u32.pow(exponent as u32))
         .sum()
@@ -82,7 +81,6 @@ pub fn part1() -> u32 {
     // When whole number is parsed, if it was a part digit: add it up
     let mut was_part_digit: bool = false;
     let m = parse(INPUT);
-    println!("{:?}", m);
     m
         .iter()
         .enumerate()
