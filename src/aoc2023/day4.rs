@@ -38,6 +38,15 @@ pub fn part1() -> u32 {
 }
 
 pub fn part2() -> u32 {
-    0
+    let m = parse(INPUT);
+    m.iter().enumerate().fold(vec![1u32; m.len()], |mut n_cards, (idx, row)| {
+        let n_wins = get_line_winning_nums(row.clone()).len();
+        // Number of cards of this index
+        let n_cards_this = n_cards[idx];
+        // Iterate over a slice of the result vector, see if it panics because
+        // of out-of bound errors.
+        n_cards[idx+1..idx+1+n_wins].iter_mut().for_each(|next_card| *next_card += n_cards_this);
+        n_cards
+    }).iter().sum()
 }
 
