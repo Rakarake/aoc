@@ -79,14 +79,11 @@ pub fn part2() -> u64 {
         .collect::<Vec<(usize, u64)>>()
         .split_inclusive(|(i, v)| i % 2 == 1)
         .map(|v| (v[0].1, v[1].1)).collect();
-    let all_seeds: Vec<u64> = seed_ranges.iter()
-        .map(|(start, len)| (*start..(*start + *len)).into_iter().collect::<Vec<u64>>())
-        .collect::<Vec<Vec<u64>>>().concat();
-
-    all_seeds.iter().map(|seed| {
-        (0..7).into_iter().fold(*seed, |category_num, category_idx| {
-            convert(&ranges, category_idx, category_num)
-        })
-    }).min().unwrap()
+    seed_ranges.iter()
+        .map(|(start, len)| (*start..(*start + *len)).into_iter().map(|seed| {
+            (0..7).into_iter().fold(seed, |category_num, category_idx| {
+                convert(&ranges, category_idx, category_num)
+            })
+        }).min().unwrap()).min().unwrap()
 }
 
