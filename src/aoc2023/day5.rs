@@ -1,4 +1,4 @@
-const INPUT: &'static str = include_str!("day4.input");
+const INPUT: &'static str = include_str!("day5.input");
 const TEST_INPUT: &'static str = "\
 seeds: 79 14 55 13
 
@@ -36,32 +36,32 @@ humidity-to-location map:
 ";
 
 //                    ranges                     seeds
-fn parse(i: &str) -> (Vec<Vec<(u32, u32, u32)>>, Vec<u32>) {
+fn parse(i: &str) -> (Vec<Vec<(u64, u64, u64)>>, Vec<u64>) {
     let mut sections = i.split("\n\n");
-    let seeds: Vec<u32> = sections
+    let seeds: Vec<u64> = sections
         .next()
         .unwrap()
         .split(' ')
         .skip(1)
-        .map(|s| s.parse::<u32>().unwrap())
+        .map(|s| s.parse::<u64>().unwrap())
         .collect();
-    let ranges: Vec<Vec<(u32, u32, u32)>> = sections.map(|s| {
-        s.split('\n').skip(1).map(|l| {
-            let nums: Vec<u32> = l.split(' ').map(|n| n.parse::<u32>().unwrap()).collect();
-            (nums[0], nums[1], nums[2])
+    let ranges: Vec<Vec<(u64, u64, u64)>> = sections.map(|s| {
+        s.split('\n').skip(1).filter_map(|l| {
+            let nums: Vec<u64> = l.split(' ').filter_map(|n| n.parse::<u64>().ok()).collect();
+            if nums.len() != 3 { None } else { Some((nums[0], nums[1], nums[2])) }
         }).collect()
     }).collect();
     (ranges, seeds)
 }
 
 // Convets number of one group to the next
-fn convert(ranges: &Vec<Vec<(u32, u32, u32)>>, group_id: usize, num: u32) -> u32 {
+fn convert(ranges: &Vec<Vec<(u64, u64, u64)>>, group_id: usize, num: u64) -> u64 {
     ranges[group_id].iter().find_map(|(dst_s, src_s, range)| {
         if num >= *src_s && num < src_s + range { Some(dst_s + (num - src_s)) } else { None }
     }).unwrap_or(num)
 }
 
-pub fn part1() -> u32 {
+pub fn part1() -> u64 {
     let (ranges, seeds) = parse(INPUT);
     seeds.iter().map(|seed| {
         (0..7).into_iter().fold(*seed, |category_num, category_idx| {
@@ -70,7 +70,7 @@ pub fn part1() -> u32 {
     }).min().unwrap()
 }
 
-pub fn part2() -> u32 {
+pub fn part2() -> u64 {
     0
 }
 
