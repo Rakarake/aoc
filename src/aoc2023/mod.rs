@@ -6,6 +6,7 @@ pub mod day2;
 pub mod day3;
 pub mod day4;
 pub mod day5;
+pub mod day6;
 
 use aoc_table::table_gen::TableGen;
 
@@ -17,5 +18,6 @@ pub fn run_all() {
         .add_next(day3::part1, day3::part2)
         .add_next(day4::part1, day4::part2)
         .add_next(day5::part1, day5::part2)
+        .add_next(day6::part1, day6::part2)
         .run();
 }
