@@ -9,4 +9,5 @@ edition = "2021"
 aoc_table = { git = "https://github.com/samhamnam/aoc_table", version = "*" }
 rand = "*"
 nom = "*"
+bigdecimal = "*"
 

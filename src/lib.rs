@@ -1,5 +1,6 @@
 pub mod aoc2022;
 pub mod aoc2023;
+pub mod utils;
 
 // Run this in, say main.rs to get the results of everything
 pub fn run_all() {
