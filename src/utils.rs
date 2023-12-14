@@ -6,7 +6,7 @@ impl<T: Clone> Lel for Vec<Vec<T>> {
     // Yes, very inefficient
     // Easy peasy when
     fn transpose(self) -> Self {
-        let mut o: Vec<Vec<Option<T>>> = vec![vec![None; self.len()]; self.len()];
+        let mut o: Vec<Vec<Option<T>>> = vec![vec![None; self.len()]; self.first().unwrap().len()];
         self.into_iter().enumerate().for_each(|(y, l)| {
             l.into_iter().enumerate().for_each(|(x, e)| {
                 o[x][y] = Some(e);

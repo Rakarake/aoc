@@ -13,6 +13,7 @@ O..#.OO...
 
 const INPUT: &'static str = include_str!("day14.input");
 
+#[derive(Clone)]
 enum Tile {
     Empty,
     Round,
@@ -32,9 +33,22 @@ fn parse(i: &'static str) -> Vec<Vec<Tile>> {
 }
 
 // Roll upwards!
-//fn roll(i: Vec<Vec<Tile>>) -> Vec<Vec<Tile>> {
-//    
-//}
+fn roll(i: Vec<Vec<Tile>>) -> Vec<Vec<Tile>> {
+    use crate::utils::Lel;
+    i.transpose().into_iter().map(|col| {
+        col
+            .into_iter()
+            .enumerate()
+            .rev()
+            .fold((vec![], vec![]), |(mut res, acc), (y, t)| {
+                // If has stones in acc and next is a cube/end: empty acc into res
+                if !acc.is_empty() {
+                }
+                res.push(t);
+                (res, acc)
+            }).0
+    }).collect()
+}
 
 pub fn part1() -> u32 {
     //parse(TEST_INPUT).into_iter().
