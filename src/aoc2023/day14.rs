@@ -49,17 +49,18 @@ fn roll(i: Vec<Vec<Tile>>) -> Vec<Vec<Tile>> {
                     if t == Round {
                         acc.push(t);
                     } else {
-                        res.push(t.clone());
                         // If a cube or at border, the boulders stop
                         if t == Cube {
                             // Roll out all the round rocks!
                             res.append(&mut acc)
                         }
+                        res.push(t);
                     }
                     (res, acc)
                 }) {
                 (mut r, mut a) => {
                     r.append(&mut a);
+                    r.reverse();
                     r
                 }
             }
@@ -72,14 +73,13 @@ pub fn part1() -> u32 {
     println!("{:#?}",
     roll(parse(TEST_INPUT)
              ));
-    0
-    //roll(parse(TEST_INPUT))
-    //    .into_iter()
-    //    .rev()
-    //    .enumerate()
-    //    .map(|(y, l)|
-    //        (l.into_iter().filter(|t| *t == Round).collect::<Vec<Tile>>().len() * (y + 1)) as u32
-    //    ).sum()
+    roll(parse(TEST_INPUT))
+        .into_iter()
+        .rev()
+        .enumerate()
+        .map(|(y, l)|
+            (l.into_iter().filter(|t| *t == Round).collect::<Vec<Tile>>().len() * (y + 1)) as u32
+        ).sum()
 }
 
 pub fn part2() -> u32 {
