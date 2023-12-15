@@ -70,10 +70,7 @@ fn roll(i: Vec<Vec<Tile>>) -> Vec<Vec<Tile>> {
 }
 
 pub fn part1() -> u32 {
-    println!("{:#?}",
-    roll(parse(TEST_INPUT)
-             ));
-    roll(parse(TEST_INPUT))
+    roll(parse(INPUT))
         .into_iter()
         .rev()
         .enumerate()
