@@ -12,7 +12,9 @@ impl<T: Clone> Lel for Vec<Vec<T>> {
                 o[x][y] = Some(e);
             })
         });
-        o.into_iter().map(|r| r.into_iter().map(|e| e.unwrap()).collect()).collect()
+        o.into_iter()
+            .map(|r| r.into_iter().map(|e| e.unwrap()).collect())
+            .collect()
     }
 }
 
@@ -21,17 +23,8 @@ mod tests {
     use super::*;
     #[test]
     fn test_transpose() {
-        let x = vec![
-            vec![1, 2, 3],
-            vec![4, 5, 6],
-            vec![7, 8, 9],
-        ];
-        let result = vec![
-            vec![1, 4, 7],
-            vec![2, 5, 8],
-            vec![3, 6, 9],
-        ];
+        let x = vec![vec![1, 2, 3], vec![4, 5, 6], vec![7, 8, 9]];
+        let result = vec![vec![1, 4, 7], vec![2, 5, 8], vec![3, 6, 9]];
         assert_eq!(x.transpose(), result);
     }
 }
-

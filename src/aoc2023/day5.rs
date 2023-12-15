@@ -45,29 +45,52 @@ fn parse(i: &str) -> (Vec<Vec<(u64, u64, u64)>>, Vec<u64>) {
         .skip(1)
         .map(|s| s.parse::<u64>().unwrap())
         .collect();
-    let ranges: Vec<Vec<(u64, u64, u64)>> = sections.map(|s| {
-        s.split('\n').skip(1).filter_map(|l| {
-            let nums: Vec<u64> = l.split(' ').filter_map(|n| n.parse::<u64>().ok()).collect();
-            if nums.len() != 3 { None } else { Some((nums[0], nums[1], nums[2])) }
-        }).collect()
-    }).collect();
+    let ranges: Vec<Vec<(u64, u64, u64)>> = sections
+        .map(|s| {
+            s.split('\n')
+                .skip(1)
+                .filter_map(|l| {
+                    let nums: Vec<u64> =
+                        l.split(' ').filter_map(|n| n.parse::<u64>().ok()).collect();
+                    if nums.len() != 3 {
+                        None
+                    } else {
+                        Some((nums[0], nums[1], nums[2]))
+                    }
+                })
+                .collect()
+        })
+        .collect();
     (ranges, seeds)
 }
 
 // Convets number of one group to the next
 fn convert(ranges: &Vec<Vec<(u64, u64, u64)>>, group_id: usize, num: u64) -> u64 {
-    ranges[group_id].iter().find_map(|(dst_s, src_s, range)| {
-        if num >= *src_s && num < src_s + range { Some(dst_s + (num - src_s)) } else { None }
-    }).unwrap_or(num)
+    ranges[group_id]
+        .iter()
+        .find_map(|(dst_s, src_s, range)| {
+            if num >= *src_s && num < src_s + range {
+                Some(dst_s + (num - src_s))
+            } else {
+                None
+            }
+        })
+        .unwrap_or(num)
 }
 
 pub fn part1() -> u64 {
     let (ranges, seeds) = parse(INPUT);
-    seeds.iter().map(|seed| {
-        (0..7).into_iter().fold(*seed, |category_num, category_idx| {
-            convert(&ranges, category_idx, category_num)
+    seeds
+        .iter()
+        .map(|seed| {
+            (0..7)
+                .into_iter()
+                .fold(*seed, |category_num, category_idx| {
+                    convert(&ranges, category_idx, category_num)
+                })
         })
-    }).min().unwrap()
+        .min()
+        .unwrap()
 }
 
 pub fn part2() -> u64 {
@@ -78,12 +101,21 @@ pub fn part2() -> u64 {
         .enumerate()
         .collect::<Vec<(usize, u64)>>()
         .split_inclusive(|(i, v)| i % 2 == 1)
-        .map(|v| (v[0].1, v[1].1)).collect();
-    seed_ranges.iter()
-        .map(|(start, len)| (*start..(*start + *len)).into_iter().map(|seed| {
-            (0..7).into_iter().fold(seed, |category_num, category_idx| {
-                convert(&ranges, category_idx, category_num)
-            })
-        }).min().unwrap()).min().unwrap()
+        .map(|v| (v[0].1, v[1].1))
+        .collect();
+    seed_ranges
+        .iter()
+        .map(|(start, len)| {
+            (*start..(*start + *len))
+                .into_iter()
+                .map(|seed| {
+                    (0..7).into_iter().fold(seed, |category_num, category_idx| {
+                        convert(&ranges, category_idx, category_num)
+                    })
+                })
+                .min()
+                .unwrap()
+        })
+        .min()
+        .unwrap()
 }
-

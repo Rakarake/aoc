@@ -1,61 +1,87 @@
 const TEST_INPUT: &'static str = "\
-OOOO.#.O..
-OO..#....#
-OO..O##..O
-O..#.OO...
-........#.
-..#....#.#
-..O..#.O.O
-..O.......
+O....#....
+O.OO#....#
+.....##...
+OO.#O....O
+.O.....O#.
+O.#..O.#.#
+..O..#O..O
+.......O..
 #....###..
-#....#....\
+#OO..#....\
 ";
 
 const INPUT: &'static str = include_str!("day14.input");
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq, Debug)]
 enum Tile {
     Empty,
     Round,
     Cube,
 }
+use Tile::*;
 
 fn parse(i: &'static str) -> Vec<Vec<Tile>> {
-    use Tile::*;
-    i.lines().map(|l| {
-        l.chars().map(|c| match c {
-            'O' => Round,
-            '#' => Cube,
-            '.' => Empty,
-            _ => panic!("Noooo!!!"),
-        }).collect()
-    }).collect()
+    i.lines()
+        .map(|l| {
+            l.chars()
+                .map(|c| match c {
+                    'O' => Round,
+                    '#' => Cube,
+                    '.' => Empty,
+                    _ => panic!("Noooo!!!"),
+                })
+                .collect()
+        })
+        .collect()
 }
 
 // Roll upwards!
 fn roll(i: Vec<Vec<Tile>>) -> Vec<Vec<Tile>> {
     use crate::utils::Lel;
-    i.transpose().into_iter().map(|col| {
-        col
-            .into_iter()
-            .enumerate()
-            .rev()
-            .fold((vec![], vec![]), |(mut res, acc), (y, t)| {
-                // If has stones in acc and next is a cube/end: empty acc into res
-                if !acc.is_empty() {
+    i.transpose()
+        .into_iter()
+        .map(|col| {
+            match col
+                .into_iter()
+                .rev()
+                .fold((vec![], vec![]), |(mut res, mut acc), t| {
+                    if t == Round {
+                        acc.push(t);
+                    } else {
+                        res.push(t.clone());
+                        // If a cube or at border, the boulders stop
+                        if t == Cube {
+                            // Roll out all the round rocks!
+                            res.append(&mut acc)
+                        }
+                    }
+                    (res, acc)
+                }) {
+                (mut r, mut a) => {
+                    r.append(&mut a);
+                    r
                 }
-                res.push(t);
-                (res, acc)
-            }).0
-    }).collect()
+            }
+        })
+        .collect::<Vec<Vec<Tile>>>()
+        .transpose()
 }
 
 pub fn part1() -> u32 {
-    //parse(TEST_INPUT).into_iter().
+    println!("{:#?}",
+    roll(parse(TEST_INPUT)
+             ));
     0
+    //roll(parse(TEST_INPUT))
+    //    .into_iter()
+    //    .rev()
+    //    .enumerate()
+    //    .map(|(y, l)|
+    //        (l.into_iter().filter(|t| *t == Round).collect::<Vec<Tile>>().len() * (y + 1)) as u32
+    //    ).sum()
 }
 
 pub fn part2() -> u32 {
     0
 }
-

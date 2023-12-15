@@ -27,4 +27,3 @@ pub fn part1() -> u32 {
 pub fn part2() -> u32 {
     0
 }
-

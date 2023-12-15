@@ -10,43 +10,58 @@ Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11\
 const INPUT: &'static str = include_str!("day4.input");
 
 fn parse_nums(i: &str) -> Vec<u32> {
-    i.split(' ').filter_map(|word| word.parse::<u32>().ok()).collect()
+    i.split(' ')
+        .filter_map(|word| word.parse::<u32>().ok())
+        .collect()
 }
 
 fn parse(i: &str) -> Vec<(Vec<u32>, Vec<u32>)> {
-    i.lines().map(|l| {
-        let (s1, s2) = l.split_once('|').unwrap();
-        (parse_nums(s1.split_once(": ").unwrap().1), parse_nums(s2))
-    }).collect()
+    i.lines()
+        .map(|l| {
+            let (s1, s2) = l.split_once('|').unwrap();
+            (parse_nums(s1.split_once(": ").unwrap().1), parse_nums(s2))
+        })
+        .collect()
 }
 
 fn get_line_winning_nums((c1, c2): (Vec<u32>, Vec<u32>)) -> Vec<u32> {
     // get-num, win-num
-    c2.iter().filter_map(|g_n| c1.iter().find(|w_n| *w_n == g_n)).copied().collect()
+    c2.iter()
+        .filter_map(|g_n| c1.iter().find(|w_n| *w_n == g_n))
+        .copied()
+        .collect()
 }
 
 fn make_score_from_line(n_hits: u32) -> u32 {
     if n_hits == 0 {
         0
-    }  else {
-        2_u32.pow(n_hits -1)
+    } else {
+        2_u32.pow(n_hits - 1)
     }
 }
 
 pub fn part1() -> u32 {
-    parse(INPUT).iter().map(|line| make_score_from_line(get_line_winning_nums(line.clone()).len() as u32)).sum()
+    parse(INPUT)
+        .iter()
+        .map(|line| make_score_from_line(get_line_winning_nums(line.clone()).len() as u32))
+        .sum()
 }
 
 pub fn part2() -> u32 {
     let m = parse(INPUT);
-    m.iter().enumerate().fold(vec![1u32; m.len()], |mut n_cards, (idx, row)| {
-        let n_wins = get_line_winning_nums(row.clone()).len();
-        // Number of cards of this index
-        let n_cards_this = n_cards[idx];
-        // Iterate over a slice of the result vector, see if it panics because
-        // of out-of bound errors.
-        n_cards[idx+1..idx+1+n_wins].iter_mut().for_each(|next_card| *next_card += n_cards_this);
-        n_cards
-    }).iter().sum()
+    m.iter()
+        .enumerate()
+        .fold(vec![1u32; m.len()], |mut n_cards, (idx, row)| {
+            let n_wins = get_line_winning_nums(row.clone()).len();
+            // Number of cards of this index
+            let n_cards_this = n_cards[idx];
+            // Iterate over a slice of the result vector, see if it panics because
+            // of out-of bound errors.
+            n_cards[idx + 1..idx + 1 + n_wins]
+                .iter_mut()
+                .for_each(|next_card| *next_card += n_cards_this);
+            n_cards
+        })
+        .iter()
+        .sum()
 }
-
