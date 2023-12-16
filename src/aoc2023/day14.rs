@@ -81,16 +81,31 @@ fn total_load(i: Vec<Vec<Tile>>) -> u32 {
         ).sum()
 }
 
+fn full_rotation(mut i: Vec<Vec<Tile>>) -> Vec<Vec<Tile>> {
+    for _ in 0..4 {
+        i = i.rotate_counter_clockwise();
+        i = roll(i);
+    }
+    i
+}
+
 pub fn part1() -> u32 {
     total_load(roll(parse(INPUT)))
 }
 
 pub fn part2() -> u32 {
     let mut tiles = parse(INPUT);
-    // *4 cuz I'm lazy
-    for _ in 0..(1000000000_u64 * 4) {
-        tiles = tiles.rotate_counter_clockwise();
-        tiles = roll(tiles)
+    let mut prev: Vec<Vec<Vec<Tile>>> = Vec::new();
+    for i in 0..1000000000_u64 {
+        println!("{:?}", i);
+        tiles = full_rotation(tiles);
+        // See if we have looped
+        for p in prev.iter().rev().take(10) {
+            if *p == tiles {
+                break;
+            }
+        }
+        prev.push(tiles.clone());
     }
     total_load(tiles)
 }
