@@ -97,7 +97,7 @@ pub fn part2() -> u32 {
     let mut tiles = parse(INPUT);
     let mut prev: Vec<Vec<Vec<Tile>>> = Vec::new();
     for i in 0..1000000000_u64 {
-        println!("{:?}", i);
+        //println!("{:?}", i);
         tiles = full_rotation(tiles);
         // See if we have looped
         for p in prev.iter().rev().take(10) {

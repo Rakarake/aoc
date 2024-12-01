@@ -1,52 +1,21 @@
 {
-  inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
-    naersk.url = "github:nix-community/naersk";
-    fenix = {
-      url = "github:nix-community/fenix";
-      inputs.nixpkgs.follows = "nixpkgs";
+  description = "Rust flake";
+  inputs =
+    {
+      nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+      flake-utils.url = "github:numtide/flake-utils";
     };
-  };
-
-  outputs = { flake-utils, nixpkgs, naersk, fenix, ... }:
+  
+  outputs = { nixpkgs, flake-utils, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        overlays = [ fenix.overlays.default ];
-        pkgs = import nixpkgs {
-          inherit system overlays;
-        };
-        toolchain = with fenix.packages.${system};  combine [
-          minimal.cargo
-          minimal.rustc
-          latest.clippy
-          latest.rust-src
-          latest.rustfmt
-        ];
+        pkgs = import nixpkgs { inherit system; };
       in
       {
-        defaultPackage = (naersk.lib.${system}.override {
-          cargo = toolchain;
-          rustc = toolchain;
-        }).buildPackage {
-          src = ./.;
-          nativeBuildInputs = with pkgs; [
-            pkg-config
-            openssl
-            gcc
-          ];
+        devShell = pkgs.mkShell
+        {
+          packages = with pkgs; [ rustc cargo ];
         };
-
-        devShell = (naersk.lib.${system}.override {
-          cargo = toolchain;
-          rustc = toolchain;
-        }).buildPackage {
-          src = ./.;
-          nativeBuildInputs = with pkgs; [
-            pkg-config
-            openssl
-            gcc
-          ];
-        };
-      });
+      }
+    );
 }
