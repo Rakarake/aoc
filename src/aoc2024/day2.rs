@@ -18,13 +18,14 @@ fn parse(i: &str) -> Vec<Vec<i32>> {
     ).collect()
 }
 
+// Might make it not return a vector
 fn follows_rules(i: &Vec<i32>) -> Vec<bool> {
     let mut iter = i.iter();
     let first = iter.next().unwrap();
     let second = iter.next().unwrap();
     let initial_diff = second - first;
     let initial_holds = initial_diff.abs() <= 3 && initial_diff.abs() >= 1;
-    let (acc, _, _) = iter.fold((vec![initial_holds], *second, initial_diff),
+    let (acc, _, _) = iter.fold((vec![true, initial_holds], *second, initial_diff),
         |(mut acc, prev, prev_diff): (Vec<bool>, i32, i32), n: &i32| {
             let diff: i32 = n - prev;
             acc.push(
@@ -37,8 +38,9 @@ fn follows_rules(i: &Vec<i32>) -> Vec<bool> {
     acc
 }
 
-fn first_unsafe(i: &Vec<bool>) -> Option<usize> {
-    i.iter().position(|x| !*x)
+fn try_without(mut l: Vec<i32>, index: usize) -> bool {
+    l.remove(index);
+    follows_rules(&l).iter().all(|x| *x)
 }
 
 pub fn part1() -> u32 {
@@ -49,13 +51,12 @@ pub fn part1() -> u32 {
 pub fn part2() -> u32 {
     let mut input = parse(INPUT);
     input.iter_mut().map(|l| {
-        let mut rules = follows_rules(l);
-        if let Some(i) = first_unsafe(&rules) {
-            l.remove(i);
-            // Recalculate if the level is fine
-            rules = follows_rules(l);
+        let rules = follows_rules(l);
+        if rules.iter().all(|x| *x) {
+            1
+        } else {
+            l.iter().enumerate().any(|(i, _)| try_without(l.clone(), i)) as u32
         }
-        if rules.iter().all(|x| *x) { 1 } else { 0 }
     }).sum()
 }
 
