@@ -15,6 +15,17 @@ pub fn part1() -> u32 {
     let mut digits_state: [char; 3];
     let mut segment_state = 0usize;
     use Segment::*;
+
+    // inherent index
+    let w = ('m', 1);
+    // Finite state machine
+    let transitions = [
+        ('m', 1),
+        ('u', 2),
+        ('l', 3),
+        ('(', 4),
+    ];
+
     let mut segments = [
         (0u8, Section("mul(")),
         (0u8, Num),
